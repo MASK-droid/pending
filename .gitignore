@@ -1,6 +1,7 @@
 # Byte-compiled / optimized / DLL files
 AcceptUser.session
 unknown_errors.txt
+me.py
 .env
 __pycache__/
 *.py[cod]

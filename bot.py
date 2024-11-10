@@ -19,6 +19,13 @@ async def approve(client, message):
     await message.delete()
 
     try:
+        # Check if the bot can access the chat
+        try:
+            chat = await client.get_chat(chat_id)
+        except PeerIdInvalid:
+            logging.error(f"Invalid chat ID: {chat_id}. Skipping.")
+            return
+
         # Get the list of all pending join requests at this moment
         pending_requests = client.get_chat_join_requests(chat_id)  # This is an async generator
         
@@ -40,8 +47,9 @@ async def approve(client, message):
                 logging.error(f"Unexpected error for user {request.user.id}: {err}")
 
         # Send a confirmation message after processing all pending requests
-        # msg = await client.send_message(chat_id, "Approved all pending join requests as of this command.")  # Wait before deleting the confirmation message
-        # await msg.delete()
+        msg = await client.send_message(chat_id, "Approved all pending join requests as of this command.")
+        await asyncio.sleep(5)  # Wait before deleting the confirmation message
+        await msg.delete()
 
     except FloodWait as e:
         logging.info(f"FloodWait for {e.value} seconds. Sleeping...") 
