@@ -1,7 +1,7 @@
 # Byte-compiled / optimized / DLL files
-bot.py
-configs.py
-
+AcceptUser.session
+unknown_errors.txt
+.env
 __pycache__/
 *.py[cod]
 *$py.class
