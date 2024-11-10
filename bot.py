@@ -46,10 +46,10 @@ async def approve(client, message):
             except Exception as err:
                 logging.error(f"Unexpected error for user {request.user.id}: {err}")
 
-        # Send a confirmation message after processing all pending requests
-        msg = await client.send_message(chat_id, "Approved all pending join requests as of this command.")
-        await asyncio.sleep(5)  # Wait before deleting the confirmation message
-        await msg.delete()
+        # # Send a confirmation message after processing all pending requests
+        # msg = await client.send_message(chat_id, "Approved all pending join requests as of this command.")
+        # await asyncio.sleep(5)  # Wait before deleting the confirmation message
+        # await msg.delete()
 
     except FloodWait as e:
         logging.info(f"FloodWait for {e.value} seconds. Sleeping...") 
