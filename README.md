@@ -11,11 +11,6 @@
 ## Config Varies
 
 <b>`API_ID`</b> : **Goto [my.telegram.org](https://my.telegram.org) to obtain this.**
-
 <b>`API_HASH`</b> : **Goto [my.telegram.org](https://my.telegram.org) to obtain this.**
-
-<b>`BOT_TOKEN`</b> : **Get the bot token from [@BotFather](https://telegram.dog/BotFather)**
-
-<b>`CHAT_ID`</b> : **Group/Channel ID Which you are going to use this bot**
-
+<b>`SESSION`</b> : **Make using Api_id and Api_hash.**
 
