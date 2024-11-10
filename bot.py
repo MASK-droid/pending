@@ -6,6 +6,15 @@ from dotenv import load_dotenv
 from pyrogram import Client, filters
 from pyrogram.types import Message
 
+# Define a port to listen on (any port that Render will detect as open)
+PORT = int(os.getenv("PORT", 8000))
+
+async def keep_alive():
+    server = await asyncio.start_server(lambda r, w: None, "0.0.0.0", PORT)
+    async with server:
+        await server.serve_forever()
+        
+        
 # Load environment variables from .env file
 load_dotenv()
 SESSION_STRING = os.getenv("SESSION_STRING")
@@ -65,3 +74,4 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     print("Bot is running!")
     User.run()
+    asyncio.run(keep_alive())
