@@ -11,6 +11,8 @@
 ## Config Varies
 
 <b>`API_ID`</b> : **Goto [my.telegram.org](https://my.telegram.org) to obtain this.**
+
 <b>`API_HASH`</b> : **Goto [my.telegram.org](https://my.telegram.org) to obtain this.**
+
 <b>`SESSION`</b> : **Make using Api_id and Api_hash.**
 
