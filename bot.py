@@ -4,19 +4,20 @@ import asyncio
 from pyrogram import Client, filters
 from pyrogram.errors import FloodWait, PeerIdInvalid, RPCError
 from dotenv import load_dotenv
-from fastapi import FastAPI
-import uvicorn
+from flask import Flask
+from threading import Thread
 
 # Load environment variables from .env file
 load_dotenv()
 SESSION_STRING = os.getenv("SESSION_STRING")
 PORT = int(os.getenv("PORT", 8000))
 
-app = FastAPI()
+# Initialize Flask app
+app = Flask(__name__)
 User = Client(name="AcceptUser", session_string=SESSION_STRING)
 
-@app.get("/")
-async def root():
+@app.route("/")
+def home():
     return {"status": "Bot is running!"}
 
 @User.on_message(filters.command(["run", "approve"], [".", "/"]))
@@ -51,20 +52,21 @@ async def approve(client, message):
     except Exception as e:
         logging.error(f"Unexpected error: {str(e)}")
 
-async def start_uvicorn():
-    """Start Uvicorn server for FastAPI."""
-    config = uvicorn.Config(app, host="0.0.0.0", port=PORT)
-    server = uvicorn.Server(config)
-    await server.serve()
+def run_flask():
+    """Runs Flask in a separate thread."""
+    app.run(host="0.0.0.0", port=PORT)
 
-async def main():
-    # Run both the FastAPI server and the bot concurrently
-    await asyncio.gather(
-        start_uvicorn(),
-        User.start()  # Start the Pyrogram client
-    )
+def run_bot():
+    """Starts the Pyrogram client."""
+    User.run()
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
-    print("Bot is running!")
-    asyncio.run(main())  # Start both
+    print("Starting Flask server and Telegram bot...")
+
+    # Start Flask server in a separate thread
+    flask_thread = Thread(target=run_flask)
+    flask_thread.start()
+
+    # Run the bot in the main thread
+    run_bot()
