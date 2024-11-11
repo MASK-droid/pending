@@ -1,3 +1,5 @@
+
+
 import os
 import logging
 import asyncio
@@ -5,7 +7,6 @@ from pyrogram import Client, filters
 from pyrogram.errors import FloodWait, PeerIdInvalid, RPCError
 from dotenv import load_dotenv
 from fastapi import FastAPI
-import uvicorn
 
 # Load environment variables from .env file
 load_dotenv()
@@ -14,10 +15,6 @@ PORT = int(os.getenv("PORT", 8000))
 
 app = FastAPI()
 User = Client(name="AcceptUser", session_string=SESSION_STRING)
-
-@app.get("/")
-async def root():
-    return {"status": "Bot is running!"}
 
 @User.on_message(filters.command(["run", "approve"], [".", "/"]))
 async def approve(client, message):
@@ -51,16 +48,14 @@ async def approve(client, message):
     except Exception as e:
         logging.error(f"Unexpected error: {str(e)}")
 
-async def start_bot():
-    await User.start()  # Starts the bot client and listens for messages
-
-async def main():
-    logging.basicConfig(level=logging.INFO)
-    print("Bot and server are starting!")
-    await asyncio.gather(
-        start_bot(),
-        uvicorn.run(app, host="0.0.0.0", port=PORT)
-    )
+@app.get("/")
+async def root():
+    return {"status": "Bot is running!"}
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    logging.basicConfig(level=logging.INFO)
+    print("Bot is running!")
+    User.run()  
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=PORT)
+
