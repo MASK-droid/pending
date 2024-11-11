@@ -51,14 +51,20 @@ async def approve(client, message):
     except Exception as e:
         logging.error(f"Unexpected error: {str(e)}")
 
-def start_uvicorn():
-    """ Start Uvicorn server for FastAPI """
+async def start_uvicorn():
+    """Start Uvicorn server for FastAPI."""
     config = uvicorn.Config(app, host="0.0.0.0", port=PORT)
     server = uvicorn.Server(config)
-    asyncio.create_task(server.serve())
+    await server.serve()
+
+async def main():
+    # Run both the FastAPI server and the bot concurrently
+    await asyncio.gather(
+        start_uvicorn(),
+        User.start()  # Start the Pyrogram client
+    )
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     print("Bot is running!")
-    start_uvicorn()  # Starts the FastAPI server in the background
-    User.run()  # Run the bot
+    asyncio.run(main())  # Start both
