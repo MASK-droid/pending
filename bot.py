@@ -58,7 +58,12 @@ def run_flask():
 
 def run_bot():
     """Starts the Pyrogram client."""
-    User.run()
+    while True:
+        try:
+            User.run()
+        except Exception as e:
+            logging.error(f"Bot stopped unexpectedly: {e}")
+            asyncio.sleep(10)  # Wait before restarting 
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
