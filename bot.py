@@ -64,14 +64,7 @@ def run_flask():
     """Runs Flask in a separate thread."""
     app.run(host="0.0.0.0", port=PORT)
 
-def run_bot():
-    """Starts the Pyrogram client."""
-    while True:
-        try:
-            User.run()
-        except Exception as e:
-            logging.error(f"Bot stopped unexpectedly: {e}")
-            asyncio.sleep(10)  # Wait before restarting 
+
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
@@ -82,4 +75,4 @@ if __name__ == "__main__":
     flask_thread.start()
 
     # Run the bot in the main thread
-    run_bot()
+    User.run()
