@@ -26,13 +26,15 @@ async def approve(client, message):
     await message.delete()
 
     try:
-        # Check if the bot can access the chat
+        # Validate the chat ID
         try:
             chat = await client.get_chat(chat_id)
+            logging.info(f"Chat details: ID={chat.id}, Title={chat.title}")
         except PeerIdInvalid:
             logging.error(f"Invalid chat ID: {chat_id}. Skipping.")
             return
 
+        # Process pending join requests
         pending_requests = client.get_chat_join_requests(chat_id)
         async for request in pending_requests:
             try:
