@@ -33,23 +33,29 @@ async def approve(client, message):
         except PeerIdInvalid:
             logging.error(f"Invalid chat ID: {chat_id}. Skipping.")
             return
+        except Exception as e:
+            logging.error(f"Error retrieving chat: {str(e)}")
+            return
 
         # Process pending join requests
-        pending_requests = client.get_chat_join_requests(chat_id)
-        async for request in pending_requests:
-            try:
-                user = request.user
-                await client.approve_chat_join_request(chat_id, user.id)
-                logging.info(f"Approved join request for user {user.id}")
-            except FloodWait as e:
-                logging.warning(f"FloodWait: sleeping for {e.value} seconds.")
-                await asyncio.sleep(e.value)
-            except PeerIdInvalid:
-                logging.error(f"Invalid peer ID: {request.user.id}. Cannot approve join request.")
-            except RPCError as e:
-                logging.error(f"RPCError: {str(e)}")
-            except Exception as err:
-                logging.error(f"Unexpected error for user {request.user.id}: {err}")
+        try:
+            pending_requests = client.get_chat_join_requests(chat_id)
+            async for request in pending_requests:
+                try:
+                    user = request.user
+                    await client.approve_chat_join_request(chat_id, user.id)
+                    logging.info(f"Approved join request for user {user.id}")
+                except FloodWait as e:
+                    logging.warning(f"FloodWait: sleeping for {e.value} seconds.")
+                    await asyncio.sleep(e.value)
+                except PeerIdInvalid:
+                    logging.error(f"Invalid peer ID: {request.user.id}. Cannot approve join request.")
+                except RPCError as e:
+                    logging.error(f"RPCError: {str(e)}")
+                except Exception as err:
+                    logging.error(f"Unexpected error for user {request.user.id}: {err}")
+        except Exception as e:
+            logging.error(f"Error processing pending join requests: {str(e)}")
 
     except Exception as e:
         logging.error(f"Unexpected error: {str(e)}")
